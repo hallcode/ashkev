@@ -1,9 +1,9 @@
 from sqlalchemy.sql.sqltypes import DateTime
-from db import Base, Guest
+from app.db import Base, Guest
 from typing import Optional, List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from db import Base, Guest, engine, session as db
+from app.db import Base, Guest, engine, session as db
 from sqlalchemy import or_, and_
 import datetime
 
