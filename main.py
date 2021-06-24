@@ -53,13 +53,20 @@ app = FastAPI()
 
 @app.get("/api/rsvp/{token}", response_model=List[NewGuest])
 def get_invite(token):
-    guests = db.query(Guest).filter(
-        or_(and_(Guest.id == token, Guest.linked_to == None), Guest.linked_to == token)
-    ).all()
+    guests = (
+        db.query(Guest)
+        .filter(
+            or_(
+                and_(Guest.id == token, Guest.linked_to == None),
+                Guest.linked_to == token,
+            )
+        )
+        .all()
+    )
 
     if len(guests) == 0:
         raise HTTPException(status_code=404, detail="Guest not found")
-    
+
     return guests
 
 
