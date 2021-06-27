@@ -2,10 +2,17 @@ from sqlalchemy.sql.sqltypes import DateTime
 from app.db import Base, Guest
 from typing import Optional, List
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.db import Base, Guest, engine, session as db
 from sqlalchemy import or_, and_
 import datetime
+
+ORIGINS = [
+    "http://localhost:3000",
+    "https://ashkev.peterboroughtenants.app",
+    "https://ashkev.alexhall.dev",
+]
 
 
 Base.metadata.create_all(engine)
@@ -49,6 +56,14 @@ class GuestFull(BaseModel):
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/api/rsvp/{token}", response_model=List[NewGuest])
