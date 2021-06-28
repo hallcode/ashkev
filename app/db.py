@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import secrets
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./rsvp_returns.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./data/rsvp_returns.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
