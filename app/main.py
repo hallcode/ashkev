@@ -30,6 +30,7 @@ class Rsvp(BaseModel):
 
 # New guest model
 class NewGuest(BaseModel):
+    id: Optional[str] = None
     first_name: str
     last_name: str
     display_name: Optional[str] = None
