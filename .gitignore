@@ -25,6 +25,5 @@ htmlcov/
 .coverage.*
 *,cover
 
-codes/
-data/
+codes/*
 *.db
