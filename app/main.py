@@ -127,7 +127,7 @@ async def new_guest(guest: NewGuest):
 
 @app.delete("/api/guests/{token}")
 async def delete_guest(token: str):
-    guests = (
+    (
         db.query(Guest)
         .filter(
             or_(
@@ -135,12 +135,11 @@ async def delete_guest(token: str):
                 Guest.linked_to == token,
             )
         )
-        .all()
+        .delete()
     )
 
-    db.delete(guests)
-    db.flush()
-    return Response({}, 204)
+    db.commit()
+    return Response('', 204)
 
 
 @app.get("/api/qr-code/{token}")
