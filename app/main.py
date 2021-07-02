@@ -143,7 +143,7 @@ async def qr_code(token: str):
     return Response({}, 204)
 
 
-@app.get("/api/qr-code/{token}.svg")
+@app.get("/api/qr-code/{token}")
 async def qr_code(token: str):
     url = f"{QR_URL}/{token}"
     code_factory = qrcode.image.svg.SvgPathImage
