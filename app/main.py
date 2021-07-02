@@ -1,18 +1,23 @@
 from sqlalchemy.sql.sqltypes import DateTime
 from app.db import Base, Guest
 from typing import Optional, List
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.db import Base, Guest, engine, session as db
 from sqlalchemy import or_, and_
 import datetime
+import qrcode
+import qrcode.image.svg
+from fastapi.responses import FileResponse
 
 ORIGINS = [
     "http://localhost:3000",
     "https://ashkev.peterboroughtenants.app",
     "https://ashkev.alexhall.dev",
 ]
+
+QR_URL = "https://ashkev.peterboroughtenants.app/rsvp"
 
 
 Base.metadata.create_all(engine)
@@ -118,3 +123,30 @@ async def new_guest(guest: NewGuest):
     db.commit()
 
     return new_guest
+
+
+@app.delete("/api/guests/{token}")
+async def qr_code(token: str):
+    guests = (
+        db.query(Guest)
+        .filter(
+            or_(
+                and_(Guest.id == token, Guest.linked_to == None),
+                Guest.linked_to == token,
+            )
+        )
+        .all()
+    )
+
+    db.delete(guests)
+    db.flush()
+    return Response({}, 204)
+
+
+@app.get("/api/qr-code/{token}.svg")
+async def qr_code(token: str):
+    url = f"{QR_URL}/{token}"
+    code_factory = qrcode.image.svg.SvgPathImage
+    img = qrcode.make(url, image_factory=code_factory)
+
+    return FileResponse(img, media_type="image/svg+xml", filename=f"{token}.svg")
