@@ -24,3 +24,7 @@ htmlcov/
 .coverage
 .coverage.*
 *,cover
+
+codes/
+data/
+*.db

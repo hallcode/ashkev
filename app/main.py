@@ -126,7 +126,7 @@ async def new_guest(guest: NewGuest):
 
 
 @app.delete("/api/guests/{token}")
-async def qr_code(token: str):
+async def delete_guest(token: str):
     guests = (
         db.query(Guest)
         .filter(
@@ -148,5 +148,6 @@ async def qr_code(token: str):
     url = f"{QR_URL}/{token}"
     code_factory = qrcode.image.svg.SvgPathImage
     img = qrcode.make(url, image_factory=code_factory)
+    img.save(f'./codes/{token}.svg', 'SVG')
 
-    return FileResponse(img, media_type="image/svg+xml", filename=f"{token}.svg")
+    return FileResponse(f'./codes/{token}.svg', media_type="image/svg+xml", filename=f"{token}.svg")
